@@ -1,0 +1,58 @@
+tasks:
+  data_extraction_task:
+    description: >
+      Extract and structure key data from clinical notes, bills, and outcome measures.
+      Identify relevant terms, categorize items by NDIS guidelines (low, mid, high),
+      and prepare structured data for cost calculation.
+    agent: data_extraction_agent
+    expected_output: >
+      Structured data with extracted keywords and categorized items,
+      organized for downstream cost calculation tasks.
+
+  cost_calculation_task:
+    description: >
+      Calculate the total costs for sessions and equipment using the data from the Data Extraction Task.
+      The task includes itemizing costs and categorizing them into NDIS classifications (low, mid, high)
+      for a complete breakdown.
+    agent: cost_calculation_agent
+    dependencies:
+      - data_extraction_task
+    expected_output: >
+      Detailed cost summary, including itemized and categorized equipment costs and
+      total session costs.
+
+  insight_recommendation_task:
+    description: >
+      Analyze costs and provide recommendations for optimization, including equipment choices,
+      session adjustments, and market-based suggestions based on trends.
+      Utilizes insights from calculated costs and structured data.
+    agent: insight_recommendation_agent
+    dependencies:
+      - cost_calculation_task
+    expected_output: >
+      Actionable insights and recommendations on cost management, equipment, and session planning,
+      considering market trends and client needs.
+
+  report_compilation_task:
+    description: >
+      Compile a structured report detailing the total costs, itemized breakdown by session and equipment,
+      and categorization levels. Incorporate insights and recommendations from the previous task.
+      Present data in tables and include summaries for stakeholder review.
+    agent: reporting_agent
+    dependencies:
+      - insight_recommendation_task
+    expected_output: >
+      A comprehensive report in tabular format with categorized costs, detailed itemization, and
+      market-based recommendations for stakeholder insight.
+
+  chart_creation_task:
+    description: >
+      Generate visualizations based on the compiled report. Charts should display cost breakdowns,
+      NDIS classification (low, mid, high), and trend analyses, enabling stakeholders to easily
+      interpret key insights.
+    agent: chart_generation_agent
+    dependencies:
+      - report_compilation_task
+    expected_output: >
+      Visual charts in image format, illustrating cost breakdowns and market trends.
+      Include URLs for chart images, ready for embedding into the report.
